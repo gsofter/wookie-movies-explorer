@@ -4,7 +4,6 @@ import { useQuery } from "@tanstack/react-query";
 import { MovieMeta, MoviesResponse } from "types/MovieMeta";
 import axiosInstance from "lib/axios";
 import Spinner from "components/Spinner";
-import { useLocation } from "react-router-dom";
 import MovieSection from "components/MovieSection";
 
 const MovieList: React.FC = () => {
@@ -20,17 +19,6 @@ const MovieList: React.FC = () => {
     },
   });
 
-  useEffect(() => {
-    if (data && data.movies) {
-      categorizeMovies(data.movies);
-    }
-  }, [data]);
-
-  if (isLoading || isFetching || isRefetching) return <Spinner />;
-
-  if (error instanceof Error)
-    return <> {`An error has occurred: ${error?.message}`}</>;
-
   const categorizeMovies = (movies: MovieMeta[]) => {
     const moviesMap = {};
     movies.forEach((movie) => {
@@ -43,6 +31,17 @@ const MovieList: React.FC = () => {
     });
     setMoviesMap(moviesMap);
   };
+
+  useEffect(() => {
+    if (data && data.movies) {
+      categorizeMovies(data.movies);
+    }
+  }, [data]);
+
+  if (isLoading || isFetching || isRefetching) return <Spinner />;
+
+  if (error instanceof Error)
+    return <> {`An error has occurred: ${error?.message}`}</>;
 
   return (
     <Box>
