@@ -2,8 +2,9 @@ import React from "react";
 import { Box } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import MovieCard from "components/MovieCard";
-import { MovieMeta, MoviesResponse } from "../types/MovieMeta";
+import { MovieMeta, MoviesResponse } from "types/MovieMeta";
 import axiosInstance from "lib/axios";
+import Spinner from "components/Spinner";
 
 const MovieList: React.FC = () => {
   const { data, isLoading, error, isSuccess } = useQuery({
@@ -15,7 +16,7 @@ const MovieList: React.FC = () => {
     },
   });
 
-  if (isLoading) return <>Loading...</>;
+  if (isLoading) return <Spinner />;
 
   if (error instanceof Error)
     return <> {`An error has occurred: ${error?.message}`}</>;
