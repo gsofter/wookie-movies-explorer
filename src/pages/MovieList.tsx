@@ -7,7 +7,7 @@ import axiosInstance from "lib/axios";
 import Spinner from "components/Spinner";
 
 const MovieList: React.FC = () => {
-  const { data, isLoading, error, isSuccess } = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: ["movies"],
     queryFn: () => {
       return axiosInstance
@@ -22,13 +22,11 @@ const MovieList: React.FC = () => {
     return <> {`An error has occurred: ${error?.message}`}</>;
 
   return (
-    isSuccess && (
-      <Box>
-        {data?.movies.map((movie: MovieMeta) => (
-          <MovieCard key={movie.id} movie={movie} />
-        ))}
-      </Box>
-    )
+    <Box>
+      {data?.movies.map((movie: MovieMeta) => (
+        <MovieCard key={movie.id} movie={movie} />
+      ))}
+    </Box>
   );
 };
 

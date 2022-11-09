@@ -1,15 +1,21 @@
 import React from "react";
-import { Box } from "@mui/material";
+import { Box, Skeleton, Typography } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import MovieCard from "components/MovieCard";
 import { MovieMeta, MoviesResponse } from "types/MovieMeta";
 import axiosInstance from "lib/axios";
 import Spinner from "components/Spinner";
 import { useParams } from "react-router-dom";
+import Grid from "@mui/material/Grid";
+import Rating from "@mui/material/Rating";
+import { calcRating, getYear } from "utils";
+import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import PersonIcon from "@mui/icons-material/Person";
 
 const MovieDetail: React.FC = () => {
   const { slug } = useParams();
-  const { data, isLoading, error, isSuccess } = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: ["movies"],
     queryFn: () => {
       return axiosInstance
@@ -18,17 +24,84 @@ const MovieDetail: React.FC = () => {
     },
   });
 
-  if (isLoading) return <Spinner />;
+  if (isLoading)
+    return (
+      <Box>
+        <Grid container spacing={2}>
+          <Grid item xs={4}>
+            <Box>
+              <Skeleton variant="rectangular" width="100%" height={300} />
+            </Box>
+          </Grid>
+          <Grid item xs={8}>
+            <Box sx={{ display: "flex", flexDirection: "column" }}>
+              {/* Display title */}
+              <Box display="flex">
+                <Skeleton variant="text" width="100%" />
+              </Box>
+
+              <Skeleton variant="text" width="500" />
+            </Box>
+          </Grid>
+        </Grid>
+      </Box>
+    );
 
   if (error instanceof Error)
     return <> {`An error has occurred: ${error?.message}`}</>;
 
   return (
-    isSuccess && (
-      <Box>
-        <MovieCard movie={data} />
-      </Box>
-    )
+    <Box>
+      <Grid container spacing={2}>
+        <Grid item xs={4}>
+          <Box>
+            <img src={data?.poster} alt={data?.title} />
+          </Box>
+        </Grid>
+        <Grid item xs={8}>
+          <Box sx={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+            <Box
+              display="flex"
+              alignItems="center"
+              justifyContent="space-between"
+            >
+              <Typography variant="h3">{data?.title}</Typography>
+              <Rating
+                name="read-only"
+                max={5}
+                precision={0.1}
+                value={calcRating(data?.imdb_rating)}
+                readOnly
+              />
+            </Box>
+
+            <Box display="flex" flexDirection="column">
+              <Typography
+                variant="subtitle1"
+                display="flex"
+                alignItems="center"
+              >
+                <CalendarTodayIcon /> {getYear(data?.released_on)} |{" "}
+                <AccessTimeIcon />
+                {data?.length} | <PersonIcon /> {data?.director}
+              </Typography>
+              <Typography variant="subtitle1">
+                Cast: {data?.cast.join(", ")}
+              </Typography>
+            </Box>
+
+            {/* Overview */}
+            <Box display="flex" flexDirection="column">
+              <Typography variant="body1">Overview</Typography>
+              <Typography variant="body1" color="text.secondary">
+                {data?.overview}
+              </Typography>
+            </Box>
+          </Box>
+        </Grid>
+      </Grid>
+      {/* <MovieCard movie={data} /> */}
+    </Box>
   );
 };
 
