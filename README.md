@@ -13,6 +13,11 @@
 `npm run build`
 
 ## Pages
-- Moves list page
-- Move detail page
-- Search page
+- Moves list page (/movies)
+![image](https://user-images.githubusercontent.com/49583931/200917022-94db6d4d-5655-4ced-bd06-88ffeafc87bc.png)
+
+- Move detail page (/movies/:slug)
+![image](https://user-images.githubusercontent.com/49583931/200917095-abbf906e-8e3e-4077-be79-72ad414300ab.png)
+
+- Search page (/movies/search?query=taxi%20driver)
+![image](https://user-images.githubusercontent.com/49583931/200917257-be73fdb9-1089-4a33-88c8-810b8b991887.png)
