@@ -9,17 +9,17 @@ const queryClient = new QueryClient();
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <Header />
-      <Container maxWidth="lg" sx={{ pt: 5, pb: 2 }}>
-        <BrowserRouter>
+    <BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <Header />
+        <Container maxWidth="lg" sx={{ pt: 5, pb: 2 }}>
           <Routes>
             <Route path="/movies" element={<MovieList />} />
             <Route path="/movies/:slug" element={<MovieDetail />} />
           </Routes>
-        </BrowserRouter>
-      </Container>
-    </QueryClientProvider>
+        </Container>
+      </QueryClientProvider>
+    </BrowserRouter>
   );
 }
 

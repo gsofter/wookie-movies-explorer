@@ -1,13 +1,12 @@
 import React from "react";
 import { Box, Skeleton, Typography } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
-import MovieCard from "components/MovieCard";
-import { MovieMeta, MoviesResponse } from "types/MovieMeta";
+import { MovieMeta } from "types/MovieMeta";
 import axiosInstance from "lib/axios";
-import Spinner from "components/Spinner";
 import { useParams } from "react-router-dom";
 import Grid from "@mui/material/Grid";
 import Rating from "@mui/material/Rating";
+import Tooltip from "@mui/material/Tooltip";
 import { calcRating, getYear } from "utils";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
@@ -15,7 +14,7 @@ import PersonIcon from "@mui/icons-material/Person";
 
 const MovieDetail: React.FC = () => {
   const { slug } = useParams();
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, isFetching, isRefetching } = useQuery({
     queryKey: ["movies"],
     queryFn: () => {
       return axiosInstance
@@ -24,7 +23,7 @@ const MovieDetail: React.FC = () => {
     },
   });
 
-  if (isLoading)
+  if (isLoading || isFetching || isRefetching)
     return (
       <Box>
         <Grid container spacing={2}>
@@ -53,12 +52,12 @@ const MovieDetail: React.FC = () => {
   return (
     <Box>
       <Grid container spacing={2}>
-        <Grid item xs={4}>
+        <Grid item lg={4} xs={0}>
           <Box>
             <img src={data?.poster} alt={data?.title} />
           </Box>
         </Grid>
-        <Grid item xs={8}>
+        <Grid item lg={8} xs={12}>
           <Box sx={{ display: "flex", flexDirection: "column", gap: "16px" }}>
             <Box
               display="flex"
@@ -66,13 +65,15 @@ const MovieDetail: React.FC = () => {
               justifyContent="space-between"
             >
               <Typography variant="h3">{data?.title}</Typography>
-              <Rating
-                name="read-only"
-                max={5}
-                precision={0.1}
-                value={calcRating(data?.imdb_rating)}
-                readOnly
-              />
+              <Tooltip title={data?.imdb_rating}>
+                <Rating
+                  name="read-only"
+                  max={5}
+                  precision={0.1}
+                  value={calcRating(data?.imdb_rating)}
+                  readOnly
+                />
+              </Tooltip>
             </Box>
 
             <Box display="flex" flexDirection="column">
@@ -86,7 +87,7 @@ const MovieDetail: React.FC = () => {
                 {data?.length} | <PersonIcon /> {data?.director}
               </Typography>
               <Typography variant="subtitle1">
-                Cast: {data?.cast.join(", ")}
+                Cast: {data?.cast?.join(", ")}
               </Typography>
             </Box>
 

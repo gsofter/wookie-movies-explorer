@@ -2,10 +2,8 @@ import React from "react";
 import { Box } from "@mui/material";
 import { MovieMeta } from "../types";
 import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
-import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Chip from "@mui/material/Chip";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
@@ -19,14 +17,13 @@ const MovieCard: React.FC<IMovieCardProps> = ({ movie }) => {
   const navigate = useNavigate();
 
   const handleClickMovie = () => {
-    console.log("clicked");
     navigate(`/movies/${movie.slug}`);
   };
 
   return (
     <Box>
       <Card
-        sx={{ maxWidth: 345, cursor: "pointer" }}
+        sx={{ width: 250, cursor: "pointer" }}
         onClick={() => handleClickMovie()}
       >
         <CardMedia
@@ -36,7 +33,15 @@ const MovieCard: React.FC<IMovieCardProps> = ({ movie }) => {
           alt={movie.slug}
         />
         <CardContent>
-          <Typography gutterBottom variant="h5" component="div">
+          <Typography
+            gutterBottom
+            variant="h5"
+            display="inline-block"
+            width="230px"
+            overflow="hidden"
+            whiteSpace="nowrap"
+            textOverflow="ellipsis"
+          >
             {movie.title}
           </Typography>
           <Box
